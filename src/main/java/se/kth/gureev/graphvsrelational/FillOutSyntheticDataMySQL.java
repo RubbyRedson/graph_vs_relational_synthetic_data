@@ -1,6 +1,7 @@
 package se.kth.gureev.graphvsrelational;
 
 import com.mysql.cj.jdbc.Blob;
+import se.kth.gureev.graphvsrelational.model.Execution;
 
 import java.sql.*;
 import java.util.Random;
@@ -16,13 +17,15 @@ public class FillOutSyntheticDataMySQL {
     private static Random random = new Random();
 
     public static void main(String[] args) throws SQLException {
-        for (int i = 0; i < 5; i++)
-            createExecution("first" + i);
+        for (int i = 0; i < 100; i++) {
+            createExecution("execution" + i);
+            System.out.println(i);
+        }
     }
 
     private static void createExecution(String name) throws SQLException {
         long start = new java.util.Date().getTime();
-        executeQueryWithTimestamp("insert into execution(name, parent, start) values('"+name+"', (SELECT id from workflow where name = 'fMRI Workflow'), ?);", new Timestamp(start));
+        executeQueryWithTimestamp("insert into execution(name, parent, start) values('"+name+"', (SELECT id from workflow where name = 'fMRI Step'), ?);", new Timestamp(start));
         long finishTime = createSteps(name, start);
         executeQueryWithTimestamp("update execution SET end = ? WHERE name = '"+name+"';", new Timestamp(finishTime));
     }
