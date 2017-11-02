@@ -21,7 +21,7 @@ public class FillOutSyntheticDataNeo4j {
     private static Set<Integer> insertedDataNodes = new HashSet<>();
 
     public static void main(String[] args) throws SQLException {
-        for (int i = 0; i < 50; i++) {
+        for (int i = 50; i < 1000; i++) {
             createExecution("execution" + i, i);
             System.out.println(i);
         }
