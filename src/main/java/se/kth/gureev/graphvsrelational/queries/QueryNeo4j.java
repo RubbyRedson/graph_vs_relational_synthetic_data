@@ -5,6 +5,11 @@ import org.neo4j.driver.v1.Driver;
 import org.neo4j.driver.v1.GraphDatabase;
 import org.neo4j.driver.v1.Session;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,11 +53,29 @@ public class QueryNeo4j {
 
         List<List<Long>> results = new ArrayList<>();
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 50  ; i++) {
             results.add(executeQueries(queries));
         }
 
         System.out.println(results);
+        saveToCSV(results);
+    }
+
+    private static void saveToCSV(List<List<Long>> results) {
+        //Get the file reference
+        Path path = Paths.get("neo4j.csv");
+
+        try (BufferedWriter writer = Files.newBufferedWriter(path))
+        {
+            for (List<Long> res : results) {
+                for (Long each : res) {
+                    writer.write(each + ";");
+                }
+                writer.write("\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private static List<Long> executeQueries(List<String> queries) {
