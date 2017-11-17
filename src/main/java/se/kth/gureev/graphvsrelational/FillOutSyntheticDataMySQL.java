@@ -1,8 +1,5 @@
 package se.kth.gureev.graphvsrelational;
 
-import com.mysql.cj.jdbc.Blob;
-
-import java.nio.charset.Charset;
 import java.sql.*;
 import java.util.Random;
 
@@ -18,7 +15,7 @@ public class FillOutSyntheticDataMySQL {
     private static final int LENGTH_OF_DATA = 1024;
 
     public static void main(String[] args) throws SQLException {
-        for (int i = 1; i < 1000; i++) {
+        for (int i = 2; i < 3; i++) {
             createExecution("execution" + i);
             System.out.println(i);
         }
@@ -375,9 +372,11 @@ public class FillOutSyntheticDataMySQL {
     }
 
     private static String generateRandomString(int length) {
-        byte[] array = new byte[length];
-        new Random().nextBytes(array);
-        String generatedString = new String(array, Charset.forName("UTF-8"));
-        return generatedString;
+        char[] text = new char[length];
+        for (int i = 0; i < length; i++)
+        {
+            text[i] = (char)(random.nextInt(25)+97);
+        }
+        return new String(text);
     }
 }

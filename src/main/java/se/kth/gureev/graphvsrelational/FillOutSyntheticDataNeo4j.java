@@ -426,9 +426,11 @@ public class FillOutSyntheticDataNeo4j {
     }
 
     private static String generateRandomString(int length) {
-        byte[] array = new byte[length];
-        new Random().nextBytes(array);
-        String generatedString = new String(array, Charset.forName("UTF-8"));
-        return generatedString;
+        char[] text = new char[length];
+        for (int i = 0; i < length; i++)
+        {
+            text[i] = (char)(random.nextInt(25)+97);
+        }
+        return new String(text);
     }
 }
