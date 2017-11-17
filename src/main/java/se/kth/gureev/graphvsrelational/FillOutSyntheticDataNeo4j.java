@@ -6,6 +6,7 @@ import org.neo4j.driver.v1.GraphDatabase;
 import org.neo4j.driver.v1.Session;
 import se.kth.gureev.graphvsrelational.model.*;
 
+import java.nio.charset.Charset;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.*;
@@ -17,6 +18,7 @@ public class FillOutSyntheticDataNeo4j {
     private static Random random = new Random();
     private static int WORKFLOW_ID = 1;
     private static int OFFSET = 30;
+    private static final int LENGTH_OF_DATA = 1024;
 
     private static Set<Integer> insertedDataNodes = new HashSet<>();
 
@@ -410,7 +412,7 @@ public class FillOutSyntheticDataNeo4j {
         res.id = id;
         res.name = inputName;
         res.step = stepId;
-        res.bytes = getRandomBytes(256);
+        res.bytes = generateRandomString(LENGTH_OF_DATA);
         return res;
     }
 
@@ -423,5 +425,10 @@ public class FillOutSyntheticDataNeo4j {
         return random.nextInt(ms) * 1000;
     }
 
-
+    private static String generateRandomString(int length) {
+        byte[] array = new byte[length];
+        new Random().nextBytes(array);
+        String generatedString = new String(array, Charset.forName("UTF-8"));
+        return generatedString;
+    }
 }

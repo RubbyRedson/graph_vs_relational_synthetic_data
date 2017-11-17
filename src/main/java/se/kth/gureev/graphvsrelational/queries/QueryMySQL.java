@@ -79,7 +79,7 @@ public class QueryMySQL {
         queries.add(allInitialInputsForSpecificOutput);
         queries.add(allInputsForSpecificOutput);
         queries.add(allOutputsForSpecificInput);
-        queries.add(allResultingOutputsForSpecificInput);
+//        queries.add(allResultingOutputsForSpecificInput);
         queries.add(countWorkflowExecutions);
         queries.add(countWorkflowExecutionsWithTimeLimit);
 

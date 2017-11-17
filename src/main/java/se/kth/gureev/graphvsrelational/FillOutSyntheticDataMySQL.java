@@ -2,6 +2,7 @@ package se.kth.gureev.graphvsrelational;
 
 import com.mysql.cj.jdbc.Blob;
 
+import java.nio.charset.Charset;
 import java.sql.*;
 import java.util.Random;
 
@@ -14,9 +15,10 @@ public class FillOutSyntheticDataMySQL {
     private static String user = "root";
     private static String pass = "root";
     private static Random random = new Random();
+    private static final int LENGTH_OF_DATA = 1024;
 
     public static void main(String[] args) throws SQLException {
-        for (int i = 101; i < 1000; i++) {
+        for (int i = 1; i < 1000; i++) {
             createExecution("execution" + i);
             System.out.println(i);
         }
@@ -226,14 +228,14 @@ public class FillOutSyntheticDataMySQL {
         String query = "INSERT INTO inputvalue(name, value, step, input) VALUES('" + inputName +"', ?, "+
                 "(select id from step where name = '"+stepName+"' AND execution = (select id from execution where name = '"+executionName+"')), (select id from input where name = '"+inputName+"')"+");";
 
-        byte[] value = new byte[256];
-        random.nextBytes(value);
+//        byte[] value = new byte[256];
+//        random.nextBytes(value);
 
         Connection con = null;
         try{
             con = getConnection();
             PreparedStatement st = con.prepareStatement(query);
-            st.setBlob(1, new Blob(value, null));
+            st.setString(1, generateRandomString(LENGTH_OF_DATA));
             st.execute();
         }
         catch (SQLException s){
@@ -251,14 +253,14 @@ public class FillOutSyntheticDataMySQL {
         String query = "INSERT INTO outputvalue(name, value, step, output) VALUES('" + output +"', ?, "+
                 "(select id from step where name = '"+stepName+"' AND execution = (select id from execution where name = '"+executionName+"')), (select id from output where name = '"+output+"')"+");";
 
-        byte[] value = new byte[256];
-        random.nextBytes(value);
+//        byte[] value = new byte[256];
+//        random.nextBytes(value);
 
         Connection con = null;
         try{
             con = getConnection();
             PreparedStatement st = con.prepareStatement(query);
-            st.setBlob(1, new Blob(value, null));
+            st.setString(1, generateRandomString(LENGTH_OF_DATA));
             st.execute();
         }
         catch (SQLException s){
@@ -370,5 +372,12 @@ public class FillOutSyntheticDataMySQL {
 
     private static Connection getConnection() throws SQLException, ClassNotFoundException, IllegalAccessException, InstantiationException {
         return DriverManager.getConnection(url+db, user, pass);
+    }
+
+    private static String generateRandomString(int length) {
+        byte[] array = new byte[length];
+        new Random().nextBytes(array);
+        String generatedString = new String(array, Charset.forName("UTF-8"));
+        return generatedString;
     }
 }
